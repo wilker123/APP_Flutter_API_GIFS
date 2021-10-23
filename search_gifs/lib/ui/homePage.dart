@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'gif_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
 
@@ -112,6 +114,9 @@ class _HomePageState extends State<HomePage> {
             return GestureDetector(
             child: Image.network(snapshot.data['data'][index]['images']['fixed_height']['url'],
             height: 300.0, fit: BoxFit.cover),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GifPage(snapshot.data['data'][index])));
+            },
           );
         }else{
           return Container(
