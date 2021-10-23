@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //https://developers.giphy.com/branch/master/static/header-logo-8974b8ae658f704a5b48a2d039b8ad93.gif
   
   String _search = "";
   int offset = 0;
@@ -32,16 +31,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  
-    _getSearch().then((value) => print(value));
-
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Image.network("https://developers.giphy.com/branch/master/static/header-logo-8974b8ae658f704a5b48a2d039b8ad93.gif"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
+      backgroundColor: Colors.black,
+      body: Column(
+        children: const <Widget>[
+           Padding(
+            padding: EdgeInsets.all(10.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: "Pesquise aqui...",
+                labelStyle: TextStyle(color: Colors.white),
+                border: OutlineInputBorder()
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
