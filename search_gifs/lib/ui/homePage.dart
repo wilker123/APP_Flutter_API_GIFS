@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black,
       body: Column(
         children: <Widget>[
-           const Padding(
+            Padding(
             padding: EdgeInsets.all(10.0),
             child: TextField(
               decoration: InputDecoration(
@@ -50,7 +50,12 @@ class _HomePageState extends State<HomePage> {
                 border: OutlineInputBorder()
               ),
               style: TextStyle(color: Colors.white, fontSize: 18.0),
-              textAlign: TextAlign.center
+              textAlign: TextAlign.center,
+              onSubmitted: (text){
+                setState((){
+                  _search = text;
+                });
+              }
             ),
           ),
           Expanded(
@@ -85,6 +90,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  int _getCount(List data){
+    if(_search == ""){
+      return data.length;
+    }else{ 
+      return data.length + 1;
+    }
+  }
+
   Widget _gridTableGifs(BuildContext context, AsyncSnapshot snapshot){
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
@@ -93,12 +106,33 @@ class _HomePageState extends State<HomePage> {
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0
       ),
-      itemCount: snapshot.data['data'].length,
+      itemCount: _getCount(snapshot.data['data']),
       itemBuilder: (context, index){
-        return GestureDetector(
-          child: Image.network(snapshot.data['data'][index]['images']['fixed_height']['url'],
-          height: 300.0, fit: BoxFit.cover),
-        );
+        if(_search == "" || index < snapshot.data['data'].length){
+            return GestureDetector(
+            child: Image.network(snapshot.data['data'][index]['images']['fixed_height']['url'],
+            height: 300.0, fit: BoxFit.cover),
+          );
+        }else{
+          return Container(
+            child: GestureDetector(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.add, color: Colors.white, size: 70.0),
+                  Text("Carregar mais...", style: TextStyle(color: Colors.white, fontSize: 22.0),)
+                ],
+              ),
+              onTap: (){
+                setState((){
+                  offset += 19;
+                  offset = 0;
+                });
+              }
+            ),
+          );
+        }
+        
       }
     );
   }
