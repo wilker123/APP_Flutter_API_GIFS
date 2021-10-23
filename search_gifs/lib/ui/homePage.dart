@@ -40,8 +40,8 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.black,
       body: Column(
-        children: const <Widget>[
-           Padding(
+        children: <Widget>[
+           const Padding(
             padding: EdgeInsets.all(10.0),
             child: TextField(
               decoration: InputDecoration(
@@ -49,10 +49,58 @@ class _HomePageState extends State<HomePage> {
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder()
               ),
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
+              textAlign: TextAlign.center
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: _getSearch(),
+              builder: (context, snapshot){
+                switch(snapshot.connectionState){
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return Container(
+                      width: 200.0,
+                      height: 200.0,
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 5.0,
+                      ),
+                    );
+                  default:
+                    if(snapshot.hasError){
+                      return Container();
+                    }else{
+                      return _gridTableGifs(context, snapshot);
+                    }
+
+                }
+              },
             ),
           ),
         ],
       ),
     );
   }
+
+  Widget _gridTableGifs(BuildContext context, AsyncSnapshot snapshot){
+    return GridView.builder(
+      padding: const EdgeInsets.all(10.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0
+      ),
+      itemCount: snapshot.data['data'].length,
+      itemBuilder: (context, index){
+        return GestureDetector(
+          child: Image.network(snapshot.data['data'][index]['images']['fixed_height']['url'],
+          height: 300.0, fit: BoxFit.cover),
+        );
+      }
+    );
+  }
+
 }
